@@ -1,0 +1,55 @@
+#!/usr/bin/env python3
+# MAC Address Changer
+# Weston Spiro 2023
+
+import subprocess
+import tkinter as tk
+
+# Create a new Tkinter window
+window = tk.Tk()
+window.title("MAC Address Changer")
+
+# Create labels and text entry fields for the interface and MAC address
+interface_label = tk.Label(window, text="Interface:")
+interface_label.grid(column=0, row=0)
+
+interface_entry = tk.Entry(window)
+interface_entry.grid(column=1, row=0)
+
+mac_label = tk.Label(window, text="New MAC address:")
+mac_label.grid(column=0, row=1)
+
+mac_entry = tk.Entry(window)
+mac_entry.grid(column=1, row=1)
+
+# Create a function to execute when the user clicks the "Change MAC" button
+def change_mac_address():
+    interface = interface_entry.get()
+    new_mac = mac_entry.get()
+
+    # Disable the interface
+    subprocess.call(["ifconfig", interface, "down"])
+
+    # Change the MAC address
+    subprocess.call(["ifconfig", interface, "hw", "ether", new_mac])
+
+    # Enable the interface
+    subprocess.call(["ifconfig", interface, "up"])
+
+    # Show a message box confirming that the MAC address has been changed
+    tk.messagebox.showinfo("MAC Address Changer", f"MAC address for {interface} has been changed to {new_mac}.")
+
+# Create a button to change the MAC address
+change_button = tk.Button(window, text="Change MAC", command=change_mac_address)
+change_button.grid(column=0, row=2, columnspan=2)
+
+# Create a button to quit the program
+quit_button = tk.Button(window, text="Quit", command=window.quit)
+quit_button.grid(column=0, row=3, columnspan=2)
+
+# Create a label displaying the year
+year_label = tk.Label(window, text="Weston Spiro 2023")
+year_label.grid(column=0, row=4, columnspan=2)
+
+# Run the Tkinter event loop
+window.mainloop()
